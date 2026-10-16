@@ -1,5 +1,5 @@
 //========================================================================
-// GLFW 3.5 Win32 - www.glfw.org
+// GLFW 3.6 Win32 - www.glfw.org
 //------------------------------------------------------------------------
 // Copyright (c) 2002-2006 Marcus Geelnard
 // Copyright (c) 2006-2019 Camilla Löwy <elmindreda@glfw.org>
@@ -164,29 +164,6 @@ static GLFWbool loadLibraries(void)
     }
 
     return GLFW_TRUE;
-}
-
-// Unload used libraries (DLLs)
-//
-static void freeLibraries(void)
-{
-    if (_glfw.win32.xinput.instance)
-        _glfwPlatformFreeModule(_glfw.win32.xinput.instance);
-
-    if (_glfw.win32.dinput8.instance)
-        _glfwPlatformFreeModule(_glfw.win32.dinput8.instance);
-
-    if (_glfw.win32.user32.instance)
-        _glfwPlatformFreeModule(_glfw.win32.user32.instance);
-
-    if (_glfw.win32.dwmapi.instance)
-        _glfwPlatformFreeModule(_glfw.win32.dwmapi.instance);
-
-    if (_glfw.win32.shcore.instance)
-        _glfwPlatformFreeModule(_glfw.win32.shcore.instance);
-
-    if (_glfw.win32.ntdll.instance)
-        _glfwPlatformFreeModule(_glfw.win32.ntdll.instance);
 }
 
 // Create key code translation tables
@@ -721,7 +698,14 @@ void _glfwTerminateWin32(void)
     _glfwTerminateEGL();
     _glfwTerminateOSMesa();
 
-    freeLibraries();
+    _glfwPlatformFreeModule(_glfw.win32.xinput.instance);
+    _glfwPlatformFreeModule(_glfw.win32.dinput8.instance);
+    _glfwPlatformFreeModule(_glfw.win32.user32.instance);
+    _glfwPlatformFreeModule(_glfw.win32.dwmapi.instance);
+    _glfwPlatformFreeModule(_glfw.win32.shcore.instance);
+    _glfwPlatformFreeModule(_glfw.win32.ntdll.instance);
+
+    memset(&_glfw.win32, 0, sizeof(_glfw.win32));
 }
 
 #endif // _GLFW_WIN32
